@@ -156,6 +156,7 @@
 	
 	void codeGenOp(node *opNode)
 	{
+		//printf("3. Intermediate Code Generation\n\n");
 		if(opNode == NULL)
 		{
 			return;
@@ -682,17 +683,38 @@
 	{
 		int i = 0, j = 0;
 		
-		printf("\n----------------------------All Symbol Tables----------------------------");
-		printf("\nScope\tName\tType\t\tDeclaration\tLast Used Line\n");
+		printf("1. Symbol Table\n\n");
+		printf("SymbolName\tLineNumber\tType\t\tScope\n");
+
 		for(i=0; i<=sIndex; i++)
 		{
 			for(j=0; j<symbolTables[i].noOfElems; j++)
 			{
-				printf("(%d, %d)\t%s\t%s\t%d\t\t%d\n", symbolTables[i].Parent, symbolTables[i].scope, symbolTables[i].Elements[j].name, symbolTables[i].Elements[j].type, symbolTables[i].Elements[j].decLineNo,  symbolTables[i].Elements[j].lastUseLine);
+
+				char type[50] = "Pack";
+
+				if(symbolTables[i].Elements[j].decLineNo == -1)
+				{
+					break;
+				}
+				if(atoi(symbolTables[i].Elements[j].name) == 0)
+				{
+					if(strlen(symbolTables[i].Elements[j].name) == 1)
+					{
+						strcpy(type, "Var");
+					}
+				}
+				else
+				{
+					strcpy(type, "Num");
+				}
+
+
+				printf("%s\t\t%d\t\t%s\t\t%d\t\t\n", symbolTables[i].Elements[j].name, symbolTables[i].Elements[j].decLineNo, type, symbolTables[i].scope);
 			}
 		}
 		
-		printf("-------------------------------------------------------------------------\n");
+		//printf("-------------------------------------------------------------------------\n");
 		
 	}
 	
@@ -723,7 +745,7 @@
 	
 	void printAST(node *root)
 	{
-		printf("\n-------------------------Abstract Syntax Tree--------------------------\n");
+		printf("\n\n2. Abstract Syntax Tree\n\n");
 		ASTToArray(root, 0);
 		int j = 0, p, q, maxLevel = 0, lCount = 0;
 		
@@ -756,6 +778,7 @@
 			j++;
 			printf("\n");
 		}
+		printf("\n\n");
 	}
 	
 	int IsValidNumber(char * string)
@@ -804,14 +827,18 @@
 	
 	void printQuads()
 	{
-		printf("\n--------------------------------All Quads---------------------------------\n");
+		printf("%s\t%s\t%s\t%s\t%s\n", "No.", "Reg", "Op", "R1", "R2");
 		int i = 0;
 		for(i=0; i<qIndex; i++)
 		{
 			if(allQ[i].I > -1)
-				printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].Op, allQ[i].A1, allQ[i].A2, allQ[i].R);
+				//printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].Op, allQ[i].A1, allQ[i].A2, allQ[i].R);
+				printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].R, allQ[i].Op, allQ[i].A1, allQ[i].A2);
 		}
-		printf("--------------------------------------------------------------------------\n");
+
+		//printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].R, allQ[i].Op, allQ[i].A1, allQ[i].A2);
+
+		//printf("--------------------------------------------------------------------------\n");
 	}
 	
 	void freeAll()
@@ -850,7 +877,7 @@
 
 %%
 
-StartDebugger : {init();} StartParse T_EndOfFile {printf("\nValid Python Syntax\n");  printAST($2); codeGenOp($2); printQuads(); printSTable(); freeAll(); exit(0);} ;
+StartDebugger : {init();} StartParse T_EndOfFile {printf("\nValid Python Syntax\n\n");  printSTable();  printAST($2); printf("3. Intermediate Code Generation\n\n"); codeGenOp($2); printf("\n\n4. Before Optimization\n\n"); printQuads(); printf("\n\n5. After Optimization\n\n"); freeAll(); exit(0);} ;
 
 constant : T_Number {insertRecord("Constant", $<text>1, @1.first_line, currentScope); $$ = createID_Const("Constant", $<text>1, currentScope);}
          | T_String {insertRecord("Constant", $<text>1, @1.first_line, currentScope); $$ = createID_Const("Constant", $<text>1, currentScope);};
@@ -961,9 +988,10 @@ func_call : T_ID T_OP call_args T_CP {$$ = createOp("Func_Call", 2, createID_Con
  
 %%
 
-void yyerror(const char *msg)
+int yyerror(const char *msg)
 {
 	printf("\nSyntax Error at Line %d, Column : %d\n",  yylineno, yylloc.last_column);
+	return(1);
 	exit(0);
 }
 

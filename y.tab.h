@@ -138,7 +138,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 837 "mypy_yacc.y" /* yacc.c:1909  */
+#line 864 "mypy_yacc.y" /* yacc.c:1909  */
  char *text; int depth; struct ASTNode* node;
 
 #line 145 "y.tab.h" /* yacc.c:1909  */

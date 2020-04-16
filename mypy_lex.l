@@ -18,30 +18,32 @@
  		#ifdef DEBUG
  		if(startFlag)
  		{
- 			printf("---------------------------------Token Sequence--------------------------\n1 ");
+ 			//printf("---------------------------------Token Sequence--------------------------\n1 ");
  			startFlag=0;
  		}
  		
  		if(strcmp(X, "NL")==0)
  		{
- 			printf("T_%s\n%d ", X, yylineno);
+ 			//printf("T_%s\n%d ", X, yylineno);
+ 			int xv = 0;
  		}
 		else
 		{
-			printf("T_%s ", X);	
+			//printf("T_%s ", X);
+			int xv = 0;	
 		}
  		#endif
  	}
  	static void push (int i) 
  	{
    		if (++sp<stack_size) stack[sp]= i;
-   		else {printf ("error: stack overflow\n"); exit(1);}
+   		else { exit(1);}
  	}
  	
  	int pop () 
  	{
    		if (sp>-1) return stack[sp--];
-   		else {printf ("error: stack underflow\n"); exit(1);}
+   		else { exit(1);}
  	}
  	
  	int top()
@@ -61,7 +63,7 @@
 			}
 			else
 			{
-				printf("Nope");
+				//printf("Nope");
 				break;
 			}	
 		}
@@ -75,9 +77,11 @@ whitespace [ ]
 Multiline_comment \'\'\'.+\'\'\'
 %%
 
+"\'\'\'"(.*\n)*"\'\'\'"             {}       
+"\"\"\""(.*\n)*"\"\"\""             {}
 [\t]*		{
 			depth = indent_depth(yytext);
-//			printf("Depth : %d ",  depth);
+//			//printf("Depth : %d ",  depth);
 			if(depth < top())
 			{
 				while (depth < top()) pop();

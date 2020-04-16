@@ -221,6 +221,7 @@
 	
 	void codeGenOp(node *opNode)
 	{
+		//printf("3. Intermediate Code Generation\n\n");
 		if(opNode == NULL)
 		{
 			return;
@@ -747,17 +748,38 @@
 	{
 		int i = 0, j = 0;
 		
-		printf("\n----------------------------All Symbol Tables----------------------------");
-		printf("\nScope\tName\tType\t\tDeclaration\tLast Used Line\n");
+		printf("1. Symbol Table\n\n");
+		printf("SymbolName\tLineNumber\tType\t\tScope\n");
+
 		for(i=0; i<=sIndex; i++)
 		{
 			for(j=0; j<symbolTables[i].noOfElems; j++)
 			{
-				printf("(%d, %d)\t%s\t%s\t%d\t\t%d\n", symbolTables[i].Parent, symbolTables[i].scope, symbolTables[i].Elements[j].name, symbolTables[i].Elements[j].type, symbolTables[i].Elements[j].decLineNo,  symbolTables[i].Elements[j].lastUseLine);
+
+				char type[50] = "Pack";
+
+				if(symbolTables[i].Elements[j].decLineNo == -1)
+				{
+					break;
+				}
+				if(atoi(symbolTables[i].Elements[j].name) == 0)
+				{
+					if(strlen(symbolTables[i].Elements[j].name) == 1)
+					{
+						strcpy(type, "Var");
+					}
+				}
+				else
+				{
+					strcpy(type, "Num");
+				}
+
+
+				printf("%s\t\t%d\t\t%s\t\t%d\t\t\n", symbolTables[i].Elements[j].name, symbolTables[i].Elements[j].decLineNo, type, symbolTables[i].scope);
 			}
 		}
 		
-		printf("-------------------------------------------------------------------------\n");
+		//printf("-------------------------------------------------------------------------\n");
 		
 	}
 	
@@ -788,7 +810,7 @@
 	
 	void printAST(node *root)
 	{
-		printf("\n-------------------------Abstract Syntax Tree--------------------------\n");
+		printf("\n\n2. Abstract Syntax Tree\n\n");
 		ASTToArray(root, 0);
 		int j = 0, p, q, maxLevel = 0, lCount = 0;
 		
@@ -821,6 +843,7 @@
 			j++;
 			printf("\n");
 		}
+		printf("\n\n");
 	}
 	
 	int IsValidNumber(char * string)
@@ -869,14 +892,18 @@
 	
 	void printQuads()
 	{
-		printf("\n--------------------------------All Quads---------------------------------\n");
+		printf("%s\t%s\t%s\t%s\t%s\n", "No.", "Reg", "Op", "R1", "R2");
 		int i = 0;
 		for(i=0; i<qIndex; i++)
 		{
 			if(allQ[i].I > -1)
-				printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].Op, allQ[i].A1, allQ[i].A2, allQ[i].R);
+				//printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].Op, allQ[i].A1, allQ[i].A2, allQ[i].R);
+				printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].R, allQ[i].Op, allQ[i].A1, allQ[i].A2);
 		}
-		printf("--------------------------------------------------------------------------\n");
+
+		//printf("%d\t%s\t%s\t%s\t%s\n", allQ[i].I, allQ[i].R, allQ[i].Op, allQ[i].A1, allQ[i].A2);
+
+		//printf("--------------------------------------------------------------------------\n");
 	}
 	
 	void freeAll()
@@ -898,7 +925,7 @@
 		free(allQ);
 	}
 
-#line 902 "y.tab.c" /* yacc.c:339  */
+#line 929 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -1026,10 +1053,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 837 "mypy_yacc.y" /* yacc.c:355  */
+#line 864 "mypy_yacc.y" /* yacc.c:355  */
  char *text; int depth; struct ASTNode* node;
 
-#line 1033 "y.tab.c" /* yacc.c:355  */
+#line 1060 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -1060,7 +1087,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 1064 "y.tab.c" /* yacc.c:358  */
+#line 1091 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1363,16 +1390,16 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   853,   853,   853,   855,   856,   858,   859,   860,   863,
-     865,   865,   865,   865,   867,   868,   869,   870,   871,   872,
-     873,   874,   876,   877,   878,   879,   880,   881,   882,   885,
-     886,   887,   888,   889,   890,   891,   892,   894,   895,   896,
-     897,   899,   900,   902,   903,   904,   905,   907,   908,   909,
-     910,   912,   914,   915,   916,   917,   918,   920,   921,   924,
-     925,   927,   928,   930,   932,   934,   935,   935,   937,   938,
-     940,   940,   941,   941,   942,   944,   944,   945,   947,   947,
-     947,   950,   950,   950,   952,   952,   953,   953,   954,   954,
-     955,   957,   957,   959
+       0,   880,   880,   880,   882,   883,   885,   886,   887,   890,
+     892,   892,   892,   892,   894,   895,   896,   897,   898,   899,
+     900,   901,   903,   904,   905,   906,   907,   908,   909,   912,
+     913,   914,   915,   916,   917,   918,   919,   921,   922,   923,
+     924,   926,   927,   929,   930,   931,   932,   934,   935,   936,
+     937,   939,   941,   942,   943,   944,   945,   947,   948,   951,
+     952,   954,   955,   957,   959,   961,   962,   962,   964,   965,
+     967,   967,   968,   968,   969,   971,   971,   972,   974,   974,
+     974,   977,   977,   977,   979,   979,   980,   980,   981,   981,
+     982,   984,   984,   986
 };
 #endif
 
@@ -2367,535 +2394,535 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 853 "mypy_yacc.y" /* yacc.c:1646  */
+#line 880 "mypy_yacc.y" /* yacc.c:1646  */
     {init();}
-#line 2373 "y.tab.c" /* yacc.c:1646  */
+#line 2400 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 853 "mypy_yacc.y" /* yacc.c:1646  */
-    {printf("\nValid Python Syntax\n");  printAST((yyvsp[-1].node)); codeGenOp((yyvsp[-1].node)); printQuads(); printSTable(); freeAll(); exit(0);}
-#line 2379 "y.tab.c" /* yacc.c:1646  */
+#line 880 "mypy_yacc.y" /* yacc.c:1646  */
+    {printf("\nValid Python Syntax\n\n");  printSTable();  printAST((yyvsp[-1].node)); printf("3. Intermediate Code Generation\n\n"); codeGenOp((yyvsp[-1].node)); printf("\n\n4. Before Optimization\n\n"); printQuads(); printf("\n\n5. After Optimization\n\n"); freeAll(); exit(0);}
+#line 2406 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 855 "mypy_yacc.y" /* yacc.c:1646  */
+#line 882 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Constant", (yyvsp[0].text), (yylsp[0]).first_line, currentScope); (yyval.node) = createID_Const("Constant", (yyvsp[0].text), currentScope);}
-#line 2385 "y.tab.c" /* yacc.c:1646  */
+#line 2412 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 856 "mypy_yacc.y" /* yacc.c:1646  */
+#line 883 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Constant", (yyvsp[0].text), (yylsp[0]).first_line, currentScope); (yyval.node) = createID_Const("Constant", (yyvsp[0].text), currentScope);}
-#line 2391 "y.tab.c" /* yacc.c:1646  */
+#line 2418 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 858 "mypy_yacc.y" /* yacc.c:1646  */
+#line 885 "mypy_yacc.y" /* yacc.c:1646  */
     {modifyRecordID("Identifier", (yyvsp[0].text), (yylsp[0]).first_line, currentScope); (yyval.node) = createID_Const("Identifier", (yyvsp[0].text), currentScope);}
-#line 2397 "y.tab.c" /* yacc.c:1646  */
+#line 2424 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 859 "mypy_yacc.y" /* yacc.c:1646  */
+#line 886 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2403 "y.tab.c" /* yacc.c:1646  */
+#line 2430 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 860 "mypy_yacc.y" /* yacc.c:1646  */
+#line 887 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2409 "y.tab.c" /* yacc.c:1646  */
+#line 2436 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 863 "mypy_yacc.y" /* yacc.c:1646  */
+#line 890 "mypy_yacc.y" /* yacc.c:1646  */
     {checkList((yyvsp[-3].text), (yylsp[-3]).first_line, currentScope); (yyval.node) = createOp("ListIndex", 2, createID_Const("ListTypeID", (yyvsp[-3].text), currentScope), (yyvsp[-1].node));}
-#line 2415 "y.tab.c" /* yacc.c:1646  */
+#line 2442 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 865 "mypy_yacc.y" /* yacc.c:1646  */
+#line 892 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2421 "y.tab.c" /* yacc.c:1646  */
+#line 2448 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 865 "mypy_yacc.y" /* yacc.c:1646  */
+#line 892 "mypy_yacc.y" /* yacc.c:1646  */
     {resetDepth();}
-#line 2427 "y.tab.c" /* yacc.c:1646  */
+#line 2454 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 865 "mypy_yacc.y" /* yacc.c:1646  */
+#line 892 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("NewLine", 2, (yyvsp[-3].node), (yyvsp[0].node));}
-#line 2433 "y.tab.c" /* yacc.c:1646  */
+#line 2460 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 865 "mypy_yacc.y" /* yacc.c:1646  */
+#line 892 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[-1].node);}
-#line 2439 "y.tab.c" /* yacc.c:1646  */
+#line 2466 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 867 "mypy_yacc.y" /* yacc.c:1646  */
+#line 894 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2445 "y.tab.c" /* yacc.c:1646  */
+#line 2472 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 868 "mypy_yacc.y" /* yacc.c:1646  */
+#line 895 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2451 "y.tab.c" /* yacc.c:1646  */
+#line 2478 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 869 "mypy_yacc.y" /* yacc.c:1646  */
+#line 896 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2457 "y.tab.c" /* yacc.c:1646  */
+#line 2484 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 870 "mypy_yacc.y" /* yacc.c:1646  */
+#line 897 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2463 "y.tab.c" /* yacc.c:1646  */
+#line 2490 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 871 "mypy_yacc.y" /* yacc.c:1646  */
+#line 898 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2469 "y.tab.c" /* yacc.c:1646  */
+#line 2496 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 872 "mypy_yacc.y" /* yacc.c:1646  */
+#line 899 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2475 "y.tab.c" /* yacc.c:1646  */
+#line 2502 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 873 "mypy_yacc.y" /* yacc.c:1646  */
+#line 900 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2481 "y.tab.c" /* yacc.c:1646  */
+#line 2508 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 874 "mypy_yacc.y" /* yacc.c:1646  */
+#line 901 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2487 "y.tab.c" /* yacc.c:1646  */
+#line 2514 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 876 "mypy_yacc.y" /* yacc.c:1646  */
+#line 903 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2493 "y.tab.c" /* yacc.c:1646  */
+#line 2520 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 877 "mypy_yacc.y" /* yacc.c:1646  */
+#line 904 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("+", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2499 "y.tab.c" /* yacc.c:1646  */
+#line 2526 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 878 "mypy_yacc.y" /* yacc.c:1646  */
+#line 905 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("-", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2505 "y.tab.c" /* yacc.c:1646  */
+#line 2532 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 879 "mypy_yacc.y" /* yacc.c:1646  */
+#line 906 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("*", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2511 "y.tab.c" /* yacc.c:1646  */
+#line 2538 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 880 "mypy_yacc.y" /* yacc.c:1646  */
+#line 907 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("/", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2517 "y.tab.c" /* yacc.c:1646  */
+#line 2544 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 881 "mypy_yacc.y" /* yacc.c:1646  */
+#line 908 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("-", 1, (yyvsp[0].node));}
-#line 2523 "y.tab.c" /* yacc.c:1646  */
+#line 2550 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 882 "mypy_yacc.y" /* yacc.c:1646  */
+#line 909 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[-1].node);}
-#line 2529 "y.tab.c" /* yacc.c:1646  */
+#line 2556 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 885 "mypy_yacc.y" /* yacc.c:1646  */
+#line 912 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("or", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2535 "y.tab.c" /* yacc.c:1646  */
+#line 2562 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 886 "mypy_yacc.y" /* yacc.c:1646  */
+#line 913 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("<", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2541 "y.tab.c" /* yacc.c:1646  */
+#line 2568 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 887 "mypy_yacc.y" /* yacc.c:1646  */
+#line 914 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("and", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2547 "y.tab.c" /* yacc.c:1646  */
+#line 2574 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 888 "mypy_yacc.y" /* yacc.c:1646  */
+#line 915 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp(">", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2553 "y.tab.c" /* yacc.c:1646  */
+#line 2580 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 889 "mypy_yacc.y" /* yacc.c:1646  */
+#line 916 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("<=", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2559 "y.tab.c" /* yacc.c:1646  */
+#line 2586 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 890 "mypy_yacc.y" /* yacc.c:1646  */
+#line 917 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp(">=", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2565 "y.tab.c" /* yacc.c:1646  */
+#line 2592 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 891 "mypy_yacc.y" /* yacc.c:1646  */
+#line 918 "mypy_yacc.y" /* yacc.c:1646  */
     {checkList((yyvsp[0].text), (yylsp[0]).first_line, currentScope); (yyval.node) = createOp("in", 2, (yyvsp[-2].node), createID_Const("Constant", (yyvsp[0].text), currentScope));}
-#line 2571 "y.tab.c" /* yacc.c:1646  */
+#line 2598 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 892 "mypy_yacc.y" /* yacc.c:1646  */
+#line 919 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)=(yyvsp[0].node);}
-#line 2577 "y.tab.c" /* yacc.c:1646  */
+#line 2604 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 894 "mypy_yacc.y" /* yacc.c:1646  */
+#line 921 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2583 "y.tab.c" /* yacc.c:1646  */
+#line 2610 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 895 "mypy_yacc.y" /* yacc.c:1646  */
+#line 922 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("==", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2589 "y.tab.c" /* yacc.c:1646  */
+#line 2616 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 896 "mypy_yacc.y" /* yacc.c:1646  */
+#line 923 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Constant", "True", (yylsp[0]).first_line, currentScope); (yyval.node) = createID_Const("Constant", "True", currentScope);}
-#line 2595 "y.tab.c" /* yacc.c:1646  */
+#line 2622 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 897 "mypy_yacc.y" /* yacc.c:1646  */
+#line 924 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Constant", "False", (yylsp[0]).first_line, currentScope); (yyval.node) = createID_Const("Constant", "False", currentScope);}
-#line 2601 "y.tab.c" /* yacc.c:1646  */
+#line 2628 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 899 "mypy_yacc.y" /* yacc.c:1646  */
+#line 926 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("!", 1, (yyvsp[0].node));}
-#line 2607 "y.tab.c" /* yacc.c:1646  */
+#line 2634 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 900 "mypy_yacc.y" /* yacc.c:1646  */
+#line 927 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[-1].node);}
-#line 2613 "y.tab.c" /* yacc.c:1646  */
+#line 2640 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 902 "mypy_yacc.y" /* yacc.c:1646  */
+#line 929 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("PackageName", (yyvsp[0].text), (yylsp[0]).first_line, currentScope); (yyval.node) = createOp("import", 1, createID_Const("PackageName", (yyvsp[0].text), currentScope));}
-#line 2619 "y.tab.c" /* yacc.c:1646  */
+#line 2646 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 903 "mypy_yacc.y" /* yacc.c:1646  */
+#line 930 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("pass", 0);}
-#line 2625 "y.tab.c" /* yacc.c:1646  */
+#line 2652 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 904 "mypy_yacc.y" /* yacc.c:1646  */
+#line 931 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("break", 0);}
-#line 2631 "y.tab.c" /* yacc.c:1646  */
+#line 2658 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 905 "mypy_yacc.y" /* yacc.c:1646  */
+#line 932 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("return", 0);}
-#line 2637 "y.tab.c" /* yacc.c:1646  */
+#line 2664 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 907 "mypy_yacc.y" /* yacc.c:1646  */
+#line 934 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Identifier", (yyvsp[-2].text), (yylsp[-2]).first_line, currentScope); (yyval.node) = createOp("=", 2, createID_Const("Identifier", (yyvsp[-2].text), currentScope), (yyvsp[0].node));}
-#line 2643 "y.tab.c" /* yacc.c:1646  */
+#line 2670 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 908 "mypy_yacc.y" /* yacc.c:1646  */
+#line 935 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Identifier", (yyvsp[-2].text), (yylsp[-2]).first_line, currentScope);(yyval.node) = createOp("=", 2, createID_Const("Identifier", (yyvsp[-2].text), currentScope), (yyvsp[0].node));}
-#line 2649 "y.tab.c" /* yacc.c:1646  */
+#line 2676 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 909 "mypy_yacc.y" /* yacc.c:1646  */
+#line 936 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Identifier", (yyvsp[-2].text), (yylsp[-2]).first_line, currentScope); (yyval.node) = createOp("=", 2, createID_Const("Identifier", (yyvsp[-2].text), currentScope), (yyvsp[0].node));}
-#line 2655 "y.tab.c" /* yacc.c:1646  */
+#line 2682 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 910 "mypy_yacc.y" /* yacc.c:1646  */
+#line 937 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("ListTypeID", (yyvsp[-3].text), (yylsp[-3]).first_line, currentScope); (yyval.node) = createID_Const("ListTypeID", (yyvsp[-3].text), currentScope);}
-#line 2661 "y.tab.c" /* yacc.c:1646  */
+#line 2688 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 912 "mypy_yacc.y" /* yacc.c:1646  */
+#line 939 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Print", 1, (yyvsp[-1].node));}
-#line 2667 "y.tab.c" /* yacc.c:1646  */
+#line 2694 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 914 "mypy_yacc.y" /* yacc.c:1646  */
+#line 941 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2673 "y.tab.c" /* yacc.c:1646  */
+#line 2700 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 915 "mypy_yacc.y" /* yacc.c:1646  */
+#line 942 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2679 "y.tab.c" /* yacc.c:1646  */
+#line 2706 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 916 "mypy_yacc.y" /* yacc.c:1646  */
+#line 943 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2685 "y.tab.c" /* yacc.c:1646  */
+#line 2712 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 917 "mypy_yacc.y" /* yacc.c:1646  */
+#line 944 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2691 "y.tab.c" /* yacc.c:1646  */
+#line 2718 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 918 "mypy_yacc.y" /* yacc.c:1646  */
+#line 945 "mypy_yacc.y" /* yacc.c:1646  */
     {yyerrok; yyclearin; (yyval.node)=createOp("SyntaxError", 0);}
-#line 2697 "y.tab.c" /* yacc.c:1646  */
+#line 2724 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 920 "mypy_yacc.y" /* yacc.c:1646  */
+#line 947 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2703 "y.tab.c" /* yacc.c:1646  */
+#line 2730 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 921 "mypy_yacc.y" /* yacc.c:1646  */
+#line 948 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2709 "y.tab.c" /* yacc.c:1646  */
+#line 2736 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 924 "mypy_yacc.y" /* yacc.c:1646  */
+#line 951 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("If", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2715 "y.tab.c" /* yacc.c:1646  */
+#line 2742 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 925 "mypy_yacc.y" /* yacc.c:1646  */
+#line 952 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("If", 3, (yyvsp[-3].node), (yyvsp[-1].node), (yyvsp[0].node));}
-#line 2721 "y.tab.c" /* yacc.c:1646  */
+#line 2748 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 927 "mypy_yacc.y" /* yacc.c:1646  */
+#line 954 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)= (yyvsp[0].node);}
-#line 2727 "y.tab.c" /* yacc.c:1646  */
+#line 2754 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 928 "mypy_yacc.y" /* yacc.c:1646  */
+#line 955 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node)= createOp("Elif", 3, (yyvsp[-3].node), (yyvsp[-1].node), (yyvsp[0].node));}
-#line 2733 "y.tab.c" /* yacc.c:1646  */
+#line 2760 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 930 "mypy_yacc.y" /* yacc.c:1646  */
+#line 957 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Else", 1, (yyvsp[0].node));}
-#line 2739 "y.tab.c" /* yacc.c:1646  */
+#line 2766 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 932 "mypy_yacc.y" /* yacc.c:1646  */
+#line 959 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("While", 2, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2745 "y.tab.c" /* yacc.c:1646  */
+#line 2772 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 934 "mypy_yacc.y" /* yacc.c:1646  */
+#line 961 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2751 "y.tab.c" /* yacc.c:1646  */
+#line 2778 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 935 "mypy_yacc.y" /* yacc.c:1646  */
+#line 962 "mypy_yacc.y" /* yacc.c:1646  */
     {initNewTable((yyvsp[0].depth)); updateCScope((yyvsp[0].depth));}
-#line 2757 "y.tab.c" /* yacc.c:1646  */
+#line 2784 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 935 "mypy_yacc.y" /* yacc.c:1646  */
+#line 962 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("BeginBlock", 2, (yyvsp[-1].node), (yyvsp[0].node));}
-#line 2763 "y.tab.c" /* yacc.c:1646  */
+#line 2790 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 937 "mypy_yacc.y" /* yacc.c:1646  */
+#line 964 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Next", 2, (yyvsp[-1].node), (yyvsp[0].node));}
-#line 2769 "y.tab.c" /* yacc.c:1646  */
+#line 2796 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 938 "mypy_yacc.y" /* yacc.c:1646  */
+#line 965 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = (yyvsp[0].node);}
-#line 2775 "y.tab.c" /* yacc.c:1646  */
+#line 2802 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 940 "mypy_yacc.y" /* yacc.c:1646  */
+#line 967 "mypy_yacc.y" /* yacc.c:1646  */
     {updateCScope((yyvsp[0].depth));}
-#line 2781 "y.tab.c" /* yacc.c:1646  */
+#line 2808 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 940 "mypy_yacc.y" /* yacc.c:1646  */
+#line 967 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("EndBlock", 1, (yyvsp[0].node));}
-#line 2787 "y.tab.c" /* yacc.c:1646  */
+#line 2814 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 941 "mypy_yacc.y" /* yacc.c:1646  */
+#line 968 "mypy_yacc.y" /* yacc.c:1646  */
     {updateCScope((yyvsp[0].depth));}
-#line 2793 "y.tab.c" /* yacc.c:1646  */
+#line 2820 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 941 "mypy_yacc.y" /* yacc.c:1646  */
+#line 968 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("EndBlock", 0);}
-#line 2799 "y.tab.c" /* yacc.c:1646  */
+#line 2826 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 942 "mypy_yacc.y" /* yacc.c:1646  */
+#line 969 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("EndBlock", 0); resetDepth();}
-#line 2805 "y.tab.c" /* yacc.c:1646  */
+#line 2832 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 944 "mypy_yacc.y" /* yacc.c:1646  */
+#line 971 "mypy_yacc.y" /* yacc.c:1646  */
     {addToList((yyvsp[0].text), 1);}
-#line 2811 "y.tab.c" /* yacc.c:1646  */
+#line 2838 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 944 "mypy_yacc.y" /* yacc.c:1646  */
+#line 971 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp(argsList, 0); clearArgsList();}
-#line 2817 "y.tab.c" /* yacc.c:1646  */
+#line 2844 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 945 "mypy_yacc.y" /* yacc.c:1646  */
+#line 972 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Void", 0);}
-#line 2823 "y.tab.c" /* yacc.c:1646  */
+#line 2850 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 947 "mypy_yacc.y" /* yacc.c:1646  */
+#line 974 "mypy_yacc.y" /* yacc.c:1646  */
     {addToList((yyvsp[0].text), 0);}
-#line 2829 "y.tab.c" /* yacc.c:1646  */
+#line 2856 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 950 "mypy_yacc.y" /* yacc.c:1646  */
+#line 977 "mypy_yacc.y" /* yacc.c:1646  */
     {addToList((yyvsp[-1].text), 0);}
-#line 2835 "y.tab.c" /* yacc.c:1646  */
+#line 2862 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 952 "mypy_yacc.y" /* yacc.c:1646  */
+#line 979 "mypy_yacc.y" /* yacc.c:1646  */
     {addToList((yyvsp[0].text), 1);}
-#line 2841 "y.tab.c" /* yacc.c:1646  */
+#line 2868 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 952 "mypy_yacc.y" /* yacc.c:1646  */
+#line 979 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp(argsList, 0); clearArgsList();}
-#line 2847 "y.tab.c" /* yacc.c:1646  */
+#line 2874 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 953 "mypy_yacc.y" /* yacc.c:1646  */
+#line 980 "mypy_yacc.y" /* yacc.c:1646  */
     {addToList((yyvsp[0].text), 1);}
-#line 2853 "y.tab.c" /* yacc.c:1646  */
+#line 2880 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 953 "mypy_yacc.y" /* yacc.c:1646  */
+#line 980 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp(argsList, 0); clearArgsList();}
-#line 2859 "y.tab.c" /* yacc.c:1646  */
+#line 2886 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 954 "mypy_yacc.y" /* yacc.c:1646  */
+#line 981 "mypy_yacc.y" /* yacc.c:1646  */
     {addToList((yyvsp[0].text), 1);}
-#line 2865 "y.tab.c" /* yacc.c:1646  */
+#line 2892 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 954 "mypy_yacc.y" /* yacc.c:1646  */
+#line 981 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp(argsList, 0); clearArgsList();}
-#line 2871 "y.tab.c" /* yacc.c:1646  */
+#line 2898 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 955 "mypy_yacc.y" /* yacc.c:1646  */
+#line 982 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Void", 0);}
-#line 2877 "y.tab.c" /* yacc.c:1646  */
+#line 2904 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 957 "mypy_yacc.y" /* yacc.c:1646  */
+#line 984 "mypy_yacc.y" /* yacc.c:1646  */
     {insertRecord("Func_Name", (yyvsp[0].text), (yylsp[0]).first_line, currentScope);}
-#line 2883 "y.tab.c" /* yacc.c:1646  */
+#line 2910 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 957 "mypy_yacc.y" /* yacc.c:1646  */
+#line 984 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Func_Name", 3, createID_Const("Func_Name", (yyvsp[-6].text), currentScope), (yyvsp[-3].node), (yyvsp[0].node));}
-#line 2889 "y.tab.c" /* yacc.c:1646  */
+#line 2916 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 959 "mypy_yacc.y" /* yacc.c:1646  */
+#line 986 "mypy_yacc.y" /* yacc.c:1646  */
     {(yyval.node) = createOp("Func_Call", 2, createID_Const("Func_Name", (yyvsp[-3].text), currentScope), (yyvsp[-1].node));}
-#line 2895 "y.tab.c" /* yacc.c:1646  */
+#line 2922 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2899 "y.tab.c" /* yacc.c:1646  */
+#line 2926 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3130,12 +3157,13 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 962 "mypy_yacc.y" /* yacc.c:1906  */
+#line 989 "mypy_yacc.y" /* yacc.c:1906  */
 
 
-void yyerror(const char *msg)
+int yyerror(const char *msg)
 {
 	printf("\nSyntax Error at Line %d, Column : %d\n",  yylineno, yylloc.last_column);
+	return(1);
 	exit(0);
 }
 

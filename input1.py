@@ -3,12 +3,8 @@ n=6
 
 # A Long Comment
 
-x+y
-
-
 def myFunction(a, b, c):
 	while(m==n):
-		
 		b=m
 		x=20
 		m=10
@@ -16,10 +12,8 @@ def myFunction(a, b, c):
 #Comment2
 m = myFunction(10, 10, 10)
 
-
 if(m==n):
-	x=10
+	m=m
 else:
-	x=11
-
+	m=n
 
